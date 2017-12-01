@@ -51,6 +51,47 @@ const findScrollable = (win, element) => {
   return null;
 };
 
+/**
+ * Function for smooth scrolling feature.
+ * Using the JavaScript window.requestAnimationFrame function to have the smooth
+ * scrolling effect in the window.
+ * @param  {[number]} x x position target of the documentElement
+ * @param  {[number]} y y position target of the documentElement
+ * @param  {[number]} step step for each smooth scrolling. Larger will be faster.
+ */
+const smoothScroll = (x, y, step = 5) => {
+    const scrollAnimation = (timestamp) => {
+        let targetX = document.documentElement.scrollLeft;
+        let targetY = document.documentElement.scrollTop;
+
+        if (x < 0) x = 0;
+        if (x > document.documentElement.scrollLeftMax) x = document.documentElement.scrollLeftMax;
+
+        if (y < 0) y = 0;
+        if (y > document.documentElement.scrollTopMax) y = document.documentElement.scrollTopMax;
+        if (Math.abs(targetY - y) > step) {
+            if (targetY < y) {
+                document.documentElement.scrollTop = targetY + step;
+                window.requestAnimationFrame(scrollAnimation);
+            } else {
+                document.documentElement.scrollTop = targetY - step;
+                window.requestAnimationFrame(scrollAnimation);
+            }
+        }
+
+        if (Math.abs(targetX - x) > step) {
+            if (targetX < x) {
+                document.documentElement.scrollLeft = targetX + step;
+                window.requestAnimationFrame(scrollAnimation);
+            } else {
+                document.documentElement.scrollLeft = targetX - step;
+                window.requestAnimationFrame(scrollAnimation);
+            }
+        }
+    }
+    window.requestAnimationFrame(scrollAnimation);
+}
+
 const scrollTarget = (win) => {
   if (isOverflowed(win.document.documentElement)) {
     return win.document.documentElement;
@@ -70,6 +111,7 @@ const scrollVertically = (win, count) => {
   let x = target.scrollLeft;
   let y = target.scrollTop + SCROLL_DELTA_Y * count;
   target.scrollTo(x, y);
+  // smoothScroll(x, y);
 };
 
 const scrollHorizonally = (win, count) => {
@@ -77,6 +119,7 @@ const scrollHorizonally = (win, count) => {
   let x = target.scrollLeft + SCROLL_DELTA_X * count;
   let y = target.scrollTop;
   target.scrollTo(x, y);
+  // smoothScroll(x, y);
 };
 
 const scrollPages = (win, count) => {
@@ -85,6 +128,7 @@ const scrollPages = (win, count) => {
   let x = target.scrollLeft;
   let y = target.scrollTop + height * count;
   target.scrollTo(x, y);
+  // smoothScroll(x, y, 25);
 };
 
 const scrollTop = (win) => {
@@ -92,6 +136,7 @@ const scrollTop = (win) => {
   let x = target.scrollLeft;
   let y = 0;
   target.scrollTo(x, y);
+  // smoothScroll(x, y, 50);
 };
 
 const scrollBottom = (win) => {
@@ -99,6 +144,7 @@ const scrollBottom = (win) => {
   let x = target.scrollLeft;
   let y = target.scrollHeight;
   target.scrollTo(x, y);
+  // smoothScroll(x, y, 50);
 };
 
 const scrollHome = (win) => {
@@ -106,6 +152,7 @@ const scrollHome = (win) => {
   let x = 0;
   let y = target.scrollTop;
   target.scrollTo(x, y);
+  // smoothScroll(x, y, 50);
 };
 
 const scrollEnd = (win) => {
@@ -113,6 +160,7 @@ const scrollEnd = (win) => {
   let x = target.scrollWidth;
   let y = target.scrollTop;
   target.scrollTo(x, y);
+  // smoothScroll(x, y, 50);
 };
 
 export {
